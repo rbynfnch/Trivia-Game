@@ -1,44 +1,101 @@
-function populate() {
-  if (quiz.isEnded()) {
-    showScores();
-  } else {
-    //show question
-    var element = document.getElementById("question");
-    element.innerHTML = quiz.getQuestionsIndex().text;
-  }
+$("#start").on("click" function() {
+    $("#start").remove();
+    console.log("you clicked start");
+for(var i=0; i<questions.length; i++){
+$("#questions").append("<h2>" + questions[i].question + "</h2>");
+for(var j=0, j < questions[i].answers.length; j++){
+    $("#questions").append("<input type='radio' name='question- " + i + "' value= '" + questions[i].answers[j] + "'>" + questions[i].answers[j])
+}
+}
+game.start();
+})
+
+
+$(document).on("click", "#end",function(){
+    game.done();
+})
+
+// function populate() {
+//   if (quiz.isEnded()) {
+//     showScores();
+//   } else {
+//     //show question
+// var element = document.getElementById("question");
+//     element.innerHTML = quiz.getQuestionsIndex().text;
+//   }
+// }
+
+var questions = [{
+    question: "In what season did the cube come?",
+    answers: ["Season 4", "Season 5", "Season 6", "Season 7"],
+    correctAnswer: "Season 5"
+}, {
+        question: "How many DJ skins have there been so far (up to Season 8)?",
+        answers: ["One", "Two", "Four", "Five"],
+        correctAnswer: "Two"
+    }, {
+        question: "What is the weapon that got removed really fast?",
+        answers: ["Sword", "Guided Missle", "Zapatron", "Burst AR"],
+        correctAnswer: "Zapatron"
+    }, {
+        question: "What is the dance that you get right when you first get the game?",
+        answers: ["Dance Moves", "Orange Justice", "Hype", "Living Large"],
+        correctAnswer: "Dance Moves" 
+    }, {
+        question: "How many types of ARs are there?",
+        answers: ["Three", "Four", "Five", "Six"],
+        correctAnswer: "Five" 
+}];;
+
+var game = {
+    correct: 0,
+    incorrect: 0,
+    counter: 120,
+    countdown: function() {
+        game.counter--;
+        $("#counter").html(game.counter);
+        if(game.counter<=0){
+            console.log("Time is up!");
+            game.done();
+        }
+    },
+    start: function(){
+        timer = setInterval(game.countdown,1000);
+        $("#sub-wrapper").prepend("<h2>Time Remaining: <span id="counter">120</span> Seconds</h2>");
+        $("#start").remove();
+        console.log("you clicked start");
+        for (var i = 0; i < questions.length; i++) {
+            $("#questions").append("<h2>" + questions[i].question + "</h2>");
+            for (var j = 0, j< questions[i].answers.length; j++) {
+                $("#questions").append("<input type='radio' name='question- " + i + "' value= '" + questions[i].answers[j] + "'>" + questions[i].answers[j])
+            }
+        }
+        $("#sub-wrapper").append("<br><button id="end">DONE</button>");
+    },
+    done: function(){
+        $.each($('input[name="question-1]":checked')),function(){
+            if($(this).val()==questions[1].correctAnswer){
+                game.correct++;
+            } else {
+                game.incorrect++;
+            }
+        });
+        this.result();
+    },
+    result: function(){
+        clearInterval(timer);
+        $("#sub-wrapper h2").remove();
+
+        $("#sub-wrapper").html("<h2>All done!</h2>");
+        $("#sub-wrapper").append("<h3>Correct Answers: "+this.correct+"</h3>");
+        $("#sub-wrapper").append("<h3>Incorrect Answers: " + this.incorrect + "</h3>");
+$("#sub-wrapper").append("<h3>Unanswered: "+(questions.length+(this.incorrect+this.correct))+"</h3>");
+    }
 }
 
-var questions = [
-  new Question(
-    "In what season did the cube come?",
-    ["Season 4", "Season 5", "Season 6", "Season 7"],
-    "Season 5"
-  ),
-  new Question(
-    "How many DJ skins have there been so far (up to Season 8)?",
-    ["One", "Two", "Four", "Five"],
-    "Two"
-  ),
-  new Question(
-    "What is the weapon that got removed really fast?",
-    ["Sword", "Guided Missle", "Zapatron", "Burst AR"],
-    "Zapatron"
-  ),
-  new Question(
-    "What is the dance that you get right when you first get the game?",
-    ["Dance Moves", "Orange Justice", "Hype", "Living Large"],
-    "Dance Moves"
-  ),
-  new Question(
-    "How many types of ARs are there?",
-    ["Three", "Four", "Five", "Six"],
-    "Five"
-  )
-];
+// var quiz = new Quiz(questions);
 
-var quiz = new Quiz(questions);
-
-populate();
+// populate();
 
 // for (var i = 0; i < questions.length; i++) {
 // var choices = window.text(questions[i].text);
@@ -54,79 +111,8 @@ populate();
 
 //try
 //$ jquery instead of this function using this. "this" will work in function
-function Question(text, choices, answer) {
-  this.text = text; //this is referring to the window, it needs to be a function in a function
-  this.choices = choices;
-  this.answer = answer;
-}
-console.log(Question);
+// 
 
-Question.prototype.correctAnswer = function(choice) {
-  return choice === this.answer;
-};
-
-//controlling the quiz
-
-function Quiz(questions) {
-  this.score = 0;
-  this.questions = questions;
-  this.questionIndex = 0;
-}
-console.log(Quiz);
-
-Quiz.prototype.getQuestionsIndex = function() {
-  return this.questions[this.questionIndex];
-};
-
-Quiz.prototype.isEnded = function() {
-  return this.questions.length === this.questionIndex;
-};
-Quiz.prototype.guess = function(answer) {
-  this.questionIndex++;
-
-  if (this.getQuestionsIndex().correctAnswer(answer)) {
-    this.score++;
-  }
-
-  this.questionIndex++;
-};
-
-var text = quiz.getQuestionsIndex().text;
-for (var i = 0; i < choices.length; i++) {
-  var element = document.getElementById("text" + i);
-  element.innerHTML = questions[i];
-  guess("btn" + i, choices[i]);
-}
-
-//show choices
-var choices = quiz.getQuestionsIndex().choices;
-for (var i = 0; i < choices.length; i++) {
-  var element = document.getElementById("choice" + i);
-  element.innerHTML = choices[i];
-  guess("btn" + i, choices[i]);
-}
-
-function guess(id, guess) {
-  var button = document.getElementById(id);
-  button.onclick = function() {
-    quiz.guess(guess);
-    populate();
-  };
-}
-
-function showProgress() {
-  var currentQustionNumber = quiz.questionIndex + 1;
-  var element = document.getElementById("progress");
-  element.innerHTML =
-    "Wuestion " + currentQustionNumber + "of " + quiz.questions.length;
-}
-//
-function showScores() {
-  var gameOverHtml = "<h1>Result</h1>";
-  gameOverHtml += "<h2 id='score'>Your score: " + quiz.score + "</h2>";
-  var element = document.getElementById("quiz");
-  element.innerHTML = gameOverHtml;
-}
 
 // var number = 20;
 // var intervalId;
