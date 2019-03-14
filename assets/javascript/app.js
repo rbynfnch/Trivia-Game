@@ -1,19 +1,25 @@
-$("#start").on("click" function() {
-    $("#start").remove();
-    console.log("you clicked start");
-for(var i=0; i<questions.length; i++){
-$("#questions").append("<h2>" + questions[i].question + "</h2>");
-for(var j=0, j < questions[i].answers.length; j++){
-    $("#questions").append("<input type='radio' name='question- " + i + "' value= '" + questions[i].answers[j] + "'>" + questions[i].answers[j])
-}
-}
-game.start();
-})
+$("#start").on("click", function() {
+  $("#start").remove();
+  console.log("you clicked start");
+  for (var i = 0; i < questions.length; i++) {
+    $("#questions").append("<h2>" + questions[i].question + "</h2>");
+    for (var j = 0; j < questions[i].answers.length; j++) {
+      $("#questions").append(
+        "<input type='radio' name='question- " +
+          i +
+          "' value= '" +
+          questions[i].answers[j] +
+          "'>" +
+          questions[i].answers[j]
+      );
+    }
+  }
+  game.start();
+});
 
-
-$(document).on("click", "#end",function(){
-    game.done();
-})
+$(document).on("click", "#end", function() {
+  game.done();
+});
 
 // function populate() {
 //   if (quiz.isEnded()) {
@@ -25,73 +31,114 @@ $(document).on("click", "#end",function(){
 //   }
 // }
 
-var questions = [{
+//questions
+var questions = [
+  {
     question: "In what season did the cube come?",
     answers: ["Season 4", "Season 5", "Season 6", "Season 7"],
     correctAnswer: "Season 5"
-}, {
-        question: "How many DJ skins have there been so far (up to Season 8)?",
-        answers: ["One", "Two", "Four", "Five"],
-        correctAnswer: "Two"
-    }, {
-        question: "What is the weapon that got removed really fast?",
-        answers: ["Sword", "Guided Missle", "Zapatron", "Burst AR"],
-        correctAnswer: "Zapatron"
-    }, {
-        question: "What is the dance that you get right when you first get the game?",
-        answers: ["Dance Moves", "Orange Justice", "Hype", "Living Large"],
-        correctAnswer: "Dance Moves" 
-    }, {
-        question: "How many types of ARs are there?",
-        answers: ["Three", "Four", "Five", "Six"],
-        correctAnswer: "Five" 
-}];;
+  },
+  {
+    question: "How many DJ skins have there been so far (up to Season 8)?",
+    answers: ["One", "Two", "Four", "Five"],
+    correctAnswer: "Two"
+  },
+  {
+    question: "What is the weapon that got removed really fast?",
+    answers: ["Sword", "Guided Missle", "Zapatron", "Burst AR"],
+    correctAnswer: "Zapatron"
+  },
+  {
+    question:
+      "What is the dance that you get right when you first get the game?",
+    answers: ["Dance Moves", "Orange Justice", "Hype", "Living Large"],
+    correctAnswer: "Dance Moves"
+  },
+  {
+    question: "How many types of ARs are there?",
+    answers: ["Three", "Four", "Five", "Six"],
+    correctAnswer: "Five"
+  }
+];
 
 var game = {
-    correct: 0,
-    incorrect: 0,
-    counter: 120,
-    countdown: function() {
-        game.counter--;
-        $("#counter").html(game.counter);
-        if(game.counter<=0){
-            console.log("Time is up!");
-            game.done();
-        }
-    },
-    start: function(){
-        timer = setInterval(game.countdown,1000);
-        $("#sub-wrapper").prepend("<h2>Time Remaining: <span id="counter">120</span> Seconds</h2>");
-        $("#start").remove();
-        console.log("you clicked start");
-        for (var i = 0; i < questions.length; i++) {
-            $("#questions").append("<h2>" + questions[i].question + "</h2>");
-            for (var j = 0, j< questions[i].answers.length; j++) {
-                $("#questions").append("<input type='radio' name='question- " + i + "' value= '" + questions[i].answers[j] + "'>" + questions[i].answers[j])
-            }
-        }
-        $("#sub-wrapper").append("<br><button id="end">DONE</button>");
-    },
-    done: function(){
-        $.each($('input[name="question-1]":checked')),function(){
-            if($(this).val()==questions[1].correctAnswer){
-                game.correct++;
-            } else {
-                game.incorrect++;
-            }
-        });
-        this.result();
-    },
-    result: function(){
-        clearInterval(timer);
-        $("#sub-wrapper h2").remove();
+  correct: 0,
+  incorrect: 0,
+  counter: 10,
 
-        $("#sub-wrapper").html("<h2>All done!</h2>");
-        $("#sub-wrapper").append("<h3>Correct Answers: "+this.correct+"</h3>");
-        $("#sub-wrapper").append("<h3>Incorrect Answers: " + this.incorrect + "</h3>");
-$("#sub-wrapper").append("<h3>Unanswered: "+(questions.length+(this.incorrect+this.correct))+"</h3>");
+  //timer count down from 10 seconds
+  countdown: function() {
+    game.counter--;
+    $("#counter").html(game.counter);
+    if (game.counter <= 0) {
+      console.log("Time is up!");
+      game.done();
     }
-}
+    if (game.counter === 0) {
+      stop();
+      alert("Time is Up!");
+    }
+    //   if (game.counter <= 0) {
+    //       console.log("Time is up!");
+    //       game.done();
+    //   }
+    //   if (game.counter === 0) {
+    //       stop();
+    //       alert("Time is Up!");
+    //   }
+  },
+  start: function() {
+    timer = setInterval(game.countdown, 1000);
+    $("#card-timer").append(
+      // $("#sub-wrapper#").prepend(
+      '<h4><span id="counter">5</span> Seconds</h4>'
+    );
+    $("#start").remove();
+    console.log("you clicked start");
+    for (var i = 0; i < questions.length; i++) {
+      $("#questions").append(questions[i].question);
+      console.log(questions[i].question);
+      //   $("#questions").append("<h3>" + questions[i].question + "</h3>");
+      for (var j = 0; j < questions[i].answers.length; j++) {
+        $("#questions").append(
+          "<input type='radio' name='question- " +
+            i +
+            "' value= '" +
+            questions[i].answers[j] +
+            "'>" +
+            questions[i].answers[j]
+        );
+      }
+    }
+    $("#sub-wrapper").append('<br><button id="end">DONE</button>');
+  },
+  done: function() {
+    $.each($('input[name="question-1]":checked')),
+      function() {
+        if ($(this).val() == questions[1].correctAnswer) {
+          game.correct++;
+        } else {
+          game.incorrect++;
+        }
+      };
+    this.result();
+  },
+  result: function() {
+    clearInterval(timer);
+    $("#sub-wrapper h2").remove();
+
+    $("#sub-wrapper").html("<h2>All done!</h2>");
+    $("#sub-wrapper").append("<h3>Correct Answers: " + this.correct + "</h3>");
+    $("#sub-wrapper").append(
+      "<h3>Incorrect Answers: " + this.incorrect + "</h3>"
+    );
+    $("#sub-wrapper").append(
+      "<h3>Unanswered: " +
+        (questions.length + (this.incorrect + this.correct)) +
+        "</h3>"
+    );
+  }
+};
 
 // var quiz = new Quiz(questions);
 
@@ -105,14 +152,9 @@ $("#sub-wrapper").append("<h3>Unanswered: "+(questions.length+(this.incorrect+th
 // }
 // };
 
-//timer count down from 10 seconds
-
-//questions
-
 //try
 //$ jquery instead of this function using this. "this" will work in function
-// 
-
+//
 
 // var number = 20;
 // var intervalId;
